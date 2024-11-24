@@ -15,6 +15,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -31,8 +35,26 @@ public class RecommendationController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String idParam = req.getParameter("id");
-        String user = req.getParameter("user_id");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
+
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String idParam = json.optString("id", "");
+        String user = json.optString("user_id", "");
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
@@ -75,9 +97,27 @@ public class RecommendationController extends HttpServlet {
     @SuppressWarnings("unchecked")
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
-        String userId = req.getParameter("user_id");
-        String advice = req.getParameter("advice");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
+
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String id = json.optString("id", "");
+        String userId = json.optString("user_id", "");
+        String advice = json.optString("advice", "");
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> adviceMap = objectMapper.readValue(advice, Map.class);
@@ -108,9 +148,27 @@ public class RecommendationController extends HttpServlet {
     @SuppressWarnings("unchecked")
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
-        String userId = req.getParameter("user_id");
-        String advice = req.getParameter("advice");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
+
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String id = json.optString("id", "");
+        String userId = json.optString("user_id", "");
+        String advice = json.optString("advice", "");
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> adviceMap = objectMapper.readValue(advice, Map.class);
@@ -140,7 +198,25 @@ public class RecommendationController extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String IdParam = req.getParameter("id");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
+
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String IdParam = json.optString("id", "");
         Long Id = Long.valueOf(IdParam);
 
         try {

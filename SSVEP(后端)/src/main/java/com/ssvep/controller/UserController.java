@@ -2,7 +2,7 @@
  * 这个类负责处理用户相关的 HTTP 请求并调用 UserService 来执行相应的业务逻辑。
  * 
  * @author 石振山
- * @version 2.3.1
+ * @version 4.3.1
  */
 package com.ssvep.controller;
 
@@ -32,23 +32,28 @@ public class UserController extends HttpServlet {
         userService = new UserService();
     }
 
-    protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
-
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods", "*");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
-                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
-        response.setHeader("Access-Control-Request-Headers",
-                "Authorization,Origin, X-Requested-With,content-Type,Accept");
-        response.setHeader("Access-Control-Expose-Headers", "*");
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String idParam = req.getParameter("id");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
 
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String idParam = json.optString("id", "");
+        
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
@@ -122,12 +127,12 @@ public class UserController extends HttpServlet {
             userDto.setRole(role);
 
             try {
-            userService.createUser(userDto);
-            resp.getWriter().write("{\"status\":\"success\",\"message\":\"用户创建成功\"}");
+                userService.createUser(userDto);
+                resp.getWriter().write("{\"status\":\"success\",\"message\":\"用户创建成功\"}");
 
             } catch (Exception e) {
-            e.printStackTrace();
-            resp.getWriter().write("{\"status\":\"error\",\"message\":\"创建用户失败\"}");
+                e.printStackTrace();
+                resp.getWriter().write("{\"status\":\"error\",\"message\":\"创建用户失败\"}");
             }
 
         } else if ("login".equalsIgnoreCase(action)) {
@@ -159,12 +164,31 @@ public class UserController extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String userIdParam = req.getParameter("userId");
-        Long userId = Long.valueOf(userIdParam);
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
-        String name = req.getParameter("name");
-        String roleParam = req.getParameter("role");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
+
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String idParam = json.optString("userId", "");
+        Long userId = Long.valueOf(idParam);
+
+        String username = json.optString("username", "");
+        String password = json.optString("password", "");
+        String name = json.optString("name", "");
+        String roleParam = json.optString("roleParam", "");
         UserDto.Role role = UserDto.Role.valueOf(roleParam.toUpperCase());
 
         UserDto userDto = new UserDto();
@@ -195,8 +219,27 @@ public class UserController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String userIdParam = req.getParameter("userId");
-        Long userId = Long.valueOf(userIdParam);
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
+
+
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String idParam = json.optString("userId", "");
+        Long userId = Long.valueOf(idParam);
 
         try {
             userService.deleteUser(userId);

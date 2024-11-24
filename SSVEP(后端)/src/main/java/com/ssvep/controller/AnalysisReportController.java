@@ -2,7 +2,7 @@
  * 这个类负责处理用户操作分析报告相关的 HTTP 请求并调用 AnalysisReportService 来执行相应的业务逻辑。
  * 
  * @author 石振山
- * @version 2.3.1
+ * @version 4.5.1
  */
 package com.ssvep.controller;
 
@@ -16,6 +16,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -33,7 +37,25 @@ public class AnalysisReportController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String idParam = req.getParameter("id");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
+
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String idParam = json.optString("id", "");
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
@@ -69,9 +91,27 @@ public class AnalysisReportController extends HttpServlet {
     @SuppressWarnings("unchecked")
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String testRecordId = req.getParameter("test_id");
-        String reportData = req.getParameter("reportData");
-        String createdAt = req.getParameter("createdAt");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
+
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String testRecordId = json.optString("test_id", "");
+        String reportData = json.optString("reportData", "");
+        String createdAt = json.optString("createdAt", "");
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> reportMap = objectMapper.readValue(reportData, Map.class);
@@ -101,10 +141,28 @@ public class AnalysisReportController extends HttpServlet {
     @SuppressWarnings("unchecked")
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
-        String testRecordId = req.getParameter("test_id");
-        String reportData = req.getParameter("reportData");
-        String createdAt = req.getParameter("createdAt");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
+
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String id = json.optString("id", "");
+        String testRecordId = json.optString("test_id", "");
+        String reportData = json.optString("reportData", "");
+        String createdAt = json.optString("createdAt", "");
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> reportMap = objectMapper.readValue(reportData, Map.class);
@@ -135,7 +193,25 @@ public class AnalysisReportController extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String IdParam = req.getParameter("id");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+        resp.setHeader("Access-Control-Request-Headers",
+                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+        resp.setHeader("Access-Control-Expose-Headers", "*");
+
+        BufferedReader reader = req.getReader();
+        StringBuilder jsonBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            jsonBuilder.append(line);
+        }
+        String requestBody = jsonBuilder.toString();
+        JSONObject json = new JSONObject(requestBody);
+
+        String IdParam = json.optString("id", "");
         Long Id = Long.valueOf(IdParam);
 
         try {
