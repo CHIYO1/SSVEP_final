@@ -6,3 +6,6 @@ target/
 
 # 忽略 bin 目录
 bin/
+
+# 忽略 .vscode 目录
+.vscode/
