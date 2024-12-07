@@ -10,6 +10,7 @@ import com.ssvep.dao.UserDao;
 import com.ssvep.dto.UserDto;
 import com.ssvep.model.Users;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -109,5 +110,14 @@ public class UserService {
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256) // 使用 Key 对象和算法
                 .compact();
+    }
+
+    // 解析JWT并返回所有claims
+    public Claims parseToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())  // 使用相同的签名密钥
+                .build()
+                .parseClaimsJws(token)
+                .getBody();  // 返回claims
     }
 }

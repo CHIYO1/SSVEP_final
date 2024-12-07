@@ -1,10 +1,28 @@
 import { fileURLToPath, URL } from 'node:url'
-
+import fs from 'fs'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    https: {
+      key: fs.readFileSync('E:\\SSVEP_NEW\\SSVEP(后端)\
+
+      \src\\main\\resources\\ssvep_decrypted.key','utf8'),  // 私钥路径
+      cert: fs.readFileSync('E:\\SSVEP_NEW\\SSVEP(后端)\\src\\main\\resources\\ssvep.crt','utf8'),  // 证书路径
+      passphrase: 'ssvep'
+    },
+    proxy: {
+      '/api': {
+        target: 'https://localhost:8080',  // 后端地址，使用 HTTPS
+        changeOrigin: true,
+        secure: false,  // 如果是自签名证书，可以设置为 false
+        rewrite: (path) => path.replace(/^\/api/, '')  // 可选：重写路径
+      },
+    },
+  },
+
   plugins: [
     vue(),
   ],

@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ssvep.util.PermissionVerification;
+import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
 
 @WebServlet("/users")
@@ -85,17 +87,35 @@ public class UserController extends HttpServlet {
     }
 
     @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 处理预检请求，返回允许的跨域设置
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept, token, id, X-Custom-Header, X-Cookie, Connection, User-Agent, Cookie");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Expose-Headers", "Authorization, X-Custom-Header");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+        resp.setStatus(HttpServletResponse.SC_OK);  // 200 OK
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        resp.setHeader("Access-Control-Allow-Origin", "https://localhost:5173");  // 允许来自指定域的跨域请求
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept, token, id, X-Custom-Header, X-Cookie, Connection, User-Agent, Cookie");
+        resp.setHeader("Access-Control-Expose-Headers", "Authorization, X-Custom-Header");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
 
-        resp.setHeader("Access-Control-Allow-Origin", "*");
-        resp.setHeader("Access-Control-Allow-Methods", "*");
-        resp.setHeader("Access-Control-Max-Age", "3600");
-        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
-                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
-        resp.setHeader("Access-Control-Request-Headers",
-                "Authorization,Origin, X-Requested-With,content-Type,Accept");
-        resp.setHeader("Access-Control-Expose-Headers", "*");
+//        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+//        resp.setHeader("Access-Control-Allow-Methods", "*");
+//        resp.setHeader("Access-Control-Max-Age", "3600");
+//        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+//                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+//        resp.setHeader("Access-Control-Request-Headers",
+//                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+//        resp.setHeader("Access-Control-Expose-Headers", "*");
+//        resp.setHeader("Access-Control-Allow-Credentials", "true");
 
         BufferedReader reader = req.getReader();
         StringBuilder jsonBuilder = new StringBuilder();
@@ -198,21 +218,26 @@ public class UserController extends HttpServlet {
         userDto.setName(name);
         userDto.setRole(role);
 
-        try {
-            userService.updateUser(userDto);
+        if (PermissionVerification.verifiedByID(userId)){
+            resp.getWriter().write("{\"status\":\"success\",\"message\":\"您无权执行该操作\"}");
+        }
+        else {
+            try {
+                userService.updateUser(userDto);
 
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
 
-            resp.getWriter().write("{\"status\":\"success\",\"message\":\"用户更新成功\"}");
+                resp.getWriter().write("{\"status\":\"success\",\"message\":\"用户更新成功\"}");
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
 
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
+                resp.setContentType("application/json");
+                resp.setCharacterEncoding("UTF-8");
 
-            resp.getWriter().write("{\"status\":\"error\",\"message\":\"更新用户失败\"}");
+                resp.getWriter().write("{\"status\":\"error\",\"message\":\"更新用户失败\"}");
+            }
         }
     }
 
@@ -258,5 +283,4 @@ public class UserController extends HttpServlet {
             resp.getWriter().write("{\"status\":\"error\",\"message\":\"删除用户失败\"}");
         }
     }
-
 }
