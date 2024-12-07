@@ -94,17 +94,35 @@ public class RecommendationController extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 处理预检请求，返回允许的跨域设置
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept, token, id, X-Custom-Header, X-Cookie, Connection, User-Agent, Cookie");
+        resp.setHeader("Access-Control-Max-Age", "3600");
+        resp.setHeader("Access-Control-Expose-Headers", "Authorization, X-Custom-Header");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+        resp.setStatus(HttpServletResponse.SC_OK);  // 200 OK
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setHeader("Access-Control-Allow-Origin", "*");
-        resp.setHeader("Access-Control-Allow-Methods", "*");
-        resp.setHeader("Access-Control-Max-Age", "3600");
-        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
-                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
-        resp.setHeader("Access-Control-Request-Headers",
-                "Authorization,Origin, X-Requested-With,content-Type,Accept");
-        resp.setHeader("Access-Control-Expose-Headers", "*");
+        resp.setHeader("Access-Control-Allow-Origin", "https://localhost:5173");  // 允许来自指定域的跨域请求
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept, token, id, X-Custom-Header, X-Cookie, Connection, User-Agent, Cookie");
+        resp.setHeader("Access-Control-Expose-Headers", "Authorization, X-Custom-Header");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+
+//        resp.setHeader("Access-Control-Allow-Origin", "*");
+//        resp.setHeader("Access-Control-Allow-Methods", "*");
+//        resp.setHeader("Access-Control-Max-Age", "3600");
+//        resp.setHeader("Access-Control-Allow-Headers", "Authorization,Origin,X-Requested-With,Content-Type,Accept,"
+//                + "content-Type,origin,x-requested-with,content-type,accept,authorization,token,id,X-Custom-Header,X-Cookie,Connection,User-Agent,Cookie,*");
+//        resp.setHeader("Access-Control-Request-Headers",
+//                "Authorization,Origin, X-Requested-With,content-Type,Accept");
+//        resp.setHeader("Access-Control-Expose-Headers", "*");
 
         BufferedReader reader = req.getReader();
         StringBuilder jsonBuilder = new StringBuilder();
@@ -217,7 +235,9 @@ public class RecommendationController extends HttpServlet {
         JSONObject json = new JSONObject(requestBody);
 
         String IdParam = json.optString("id", "");
+        String roleParam = json.optString("roleParam", ""); //test：获取用户角色信息
         Long Id = Long.valueOf(IdParam);
+        System.out.println(roleParam); //test：输出角色身份信息
 
         try {
             recommendationService.deleteRecommendation(Id);

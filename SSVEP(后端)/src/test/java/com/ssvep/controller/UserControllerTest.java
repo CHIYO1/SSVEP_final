@@ -11,16 +11,19 @@ package com.ssvep.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssvep.dto.UserDto;
 import com.ssvep.service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 
@@ -30,31 +33,57 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 public class UserControllerTest {
+//    private UserController userController;
+//    private UserService userService;
+//    private HttpServletRequest request;
+//    private HttpServletResponse response;
+//    private ByteArrayOutputStream outputStream;
+//    private PrintWriter writer;
+//
+//    @BeforeEach
+//    public void setUp() throws Exception {
+//        userService = Mockito.mock(UserService.class);
+//        userController = new UserController();
+//
+//        // 使用反射设置 UserController 的 userService 字段
+//        userController.init();
+//        Field userServiceField = UserController.class.getDeclaredField("userService");
+//        userServiceField.setAccessible(true);
+//        userServiceField.set(userController, userService);
+//
+//        // 捕获响应
+//        outputStream = new ByteArrayOutputStream();
+//        writer = new PrintWriter(outputStream);
+//        response = Mockito.mock(HttpServletResponse.class);
+//        when(response.getWriter()).thenReturn(writer);
+//
+//        request = Mockito.mock(HttpServletRequest.class);
+//    }
+
+    @InjectMocks
     private UserController userController;
+
+    @Mock
     private UserService userService;
+
+    @Mock
     private HttpServletRequest request;
+
+    @Mock
     private HttpServletResponse response;
+
     private ByteArrayOutputStream outputStream;
     private PrintWriter writer;
 
     @BeforeEach
     public void setUp() throws Exception {
-        userService = Mockito.mock(UserService.class);
-        userController = new UserController();
-
-        // 使用反射设置 UserController 的 userService 字段
-        userController.init();
-        Field userServiceField = UserController.class.getDeclaredField("userService");
-        userServiceField.setAccessible(true);
-        userServiceField.set(userController, userService);
+        // 初始化 Mockito 注解
+        MockitoAnnotations.openMocks(this);
 
         // 捕获响应
         outputStream = new ByteArrayOutputStream();
         writer = new PrintWriter(outputStream);
-        response = Mockito.mock(HttpServletResponse.class);
         when(response.getWriter()).thenReturn(writer);
-
-        request = Mockito.mock(HttpServletRequest.class);
     }
 
     @Test
@@ -159,30 +188,96 @@ public class UserControllerTest {
         writer.flush(); 
         assertEquals(expectedResponse, outputStream.toString());
     }
+//    @Test
+//    public void testDoDelete_Success() throws ServletException, IOException,SQLException {
+//        when(request.getParameter("userId")).thenReturn("1");
+//
+//        doNothing().when(userService).deleteUser(anyLong());
+//
+//        userController.doDelete(request, response);
+//
+//        String expectedResponse = "{\"status\":\"success\",\"message\":\"用户删除成功\"}";
+//        writer.flush();
+//        assertEquals(expectedResponse, outputStream.toString());
+//    }
+//
+//    @Test
+//    public void testDoDelete_Failure() throws ServletException, IOException,SQLException {
+//        when(request.getParameter("userId")).thenReturn("1");
+//
+//        doThrow(new RuntimeException("删除用户失败")).when(userService).deleteUser(anyLong());
+//
+//        userController.doDelete(request, response);
+//
+//        String expectedResponse = "{\"status\":\"error\",\"message\":\"删除用户失败\"}";
+//        writer.flush();
+//        assertEquals(expectedResponse, outputStream.toString());
+//    }
+
+//    //v2
+//    public void testDoDelete_Success() throws ServletException, IOException, SQLException {
+//        // 模拟 HttpServletRequest 的 getReader() 方法
+//        String jsonBody = "{\"userId\":\"1\"}";
+//        BufferedReader reader = new BufferedReader(new StringReader(jsonBody));  // 创建一个模拟的 BufferedReader
+//        when(request.getReader()).thenReturn(reader);  // 返回模拟的 reader
+//
+//        // 模拟删除用户服务
+//        doNothing().when(userService).deleteUser(anyLong());
+//
+//        // 执行 doDelete 方法
+//        userController.doDelete(request, response);
+//
+//        // 校验输出结果
+//        String expectedResponse = "{\"status\":\"success\",\"message\":\"用户删除成功\"}";
+//        writer.flush();
+//        assertEquals(expectedResponse, outputStream.toString());
+//    }
 
     @Test
-    public void testDoDelete_Success() throws ServletException, IOException,SQLException {
-        when(request.getParameter("userId")).thenReturn("1");
+    public void testDoDelete_Success() throws ServletException, IOException, SQLException {
+        // 模拟 HttpServletRequest 的 getReader() 方法
+        String jsonBody = "{\"userId\":\"1\"}";
+        BufferedReader reader = new BufferedReader(new StringReader(jsonBody));  // 创建一个模拟的 BufferedReader
+        when(request.getReader()).thenReturn(reader);  // 返回模拟的 reader
 
+//        // 创建 JWT 令牌
+//        String token = userService.generateToken("testUser");
+//
+//        // 模拟解析令牌返回的 claims
+//        Claims mockClaims = userService.parseToken(token);  // 使用实际的 token 来解析
+//        when(userService.parseToken(anyString())).thenReturn(mockClaims);
+        Claims mockClaims = Jwts.claims().setSubject("testUser");  // 创建一个模拟的 Claims 对象
+        when(userService.parseToken(anyString())).thenReturn(mockClaims);  // 确保返回有效的 Claims
+
+
+        // 模拟删除用户服务
         doNothing().when(userService).deleteUser(anyLong());
 
+        // 执行 doDelete 方法
         userController.doDelete(request, response);
 
+        // 校验输出结果
         String expectedResponse = "{\"status\":\"success\",\"message\":\"用户删除成功\"}";
-        writer.flush(); 
+        writer.flush();
         assertEquals(expectedResponse, outputStream.toString());
     }
 
     @Test
-    public void testDoDelete_Failure() throws ServletException, IOException,SQLException {
-        when(request.getParameter("userId")).thenReturn("1");
+    public void testDoDelete_Failure() throws ServletException, IOException, SQLException {
+        // 模拟 HttpServletRequest 的 getReader() 方法
+        String jsonBody = "{\"userId\":\"1\"}";
+        BufferedReader reader = new BufferedReader(new StringReader(jsonBody));  // 创建一个模拟的 BufferedReader
+        when(request.getReader()).thenReturn(reader);  // 返回模拟的 reader
 
+        // 模拟删除用户服务抛出异常
         doThrow(new RuntimeException("删除用户失败")).when(userService).deleteUser(anyLong());
 
+        // 执行 doDelete 方法
         userController.doDelete(request, response);
 
+        // 校验输出结果
         String expectedResponse = "{\"status\":\"error\",\"message\":\"删除用户失败\"}";
-        writer.flush(); 
+        writer.flush();
         assertEquals(expectedResponse, outputStream.toString());
     }
 
