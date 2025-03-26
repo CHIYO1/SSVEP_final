@@ -29,11 +29,14 @@
 <script setup lang="ts">
 import DetectTour from '../components/DetectTour.vue'
 import { useCounterStore } from '../stores/counter.js'
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const store = useCounterStore()
 
 const DetectStart = () => {
-  store.open = true
+  // store.open = true
+  router.push('/main/DetectView');
 }
 
 </script>

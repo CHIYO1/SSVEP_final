@@ -75,7 +75,7 @@
             <template #footer>
                 <div class="dialog-footer">
                     <el-button @click="dialogVisible = false">取消</el-button>
-                    <el-button type="primary" @click="dialogVisible = false">
+                    <el-button type="primary" @click="onSubmit">
                         确定
                     </el-button>
                 </div>
@@ -166,6 +166,7 @@
 <script setup>
 import { ref } from 'vue'
 import { reactive } from 'vue'
+import { ElMessage } from 'element-plus'
 // import tableDataJson from '@/assets/data/localdata_table.json'
 import tableDataJson2 from '@/assets/data/localdata_table2.json'
 const input = ref('')
@@ -178,6 +179,14 @@ const tableData2 = ref(tableDataJson2)
 
 const download = () => {
     window.location.href = '../../数据文件.csv'
+}
+
+const onSubmit = () => {
+    dialogVisible.value = false;
+    ElMessage({
+    message: '恭喜你，成功上传啦！',
+    type: 'success',
+  })
 }
 
 const form = reactive({

@@ -75,9 +75,10 @@ const toggleSignUpMode = () => {
 };
 
 const onSignIn = async () => {
-    // router.push('/main/HomeView');
-    try {
-        // 向后端 API 发送登录请求
+    router.push('/main/HomeView');
+/**
+ * try {
+         //向后端 API 发送登录请求
         const response = await axios.post('http://localhost:8080/users', {
             action: 'login',
             username: signInData.value.username,
@@ -99,6 +100,8 @@ const onSignIn = async () => {
         console.error('登录失败：', error.response ? error.response.data : error.message);
         signInData.value = { username: '', password: ''};
     }
+ */
+    
 };
 
 const onSignUp = async () => {

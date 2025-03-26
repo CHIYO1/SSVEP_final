@@ -18,6 +18,7 @@ import SensitivityTesting from '@/views/SensitivityTesting.vue'
 import GlaucomaTest from '@/views/GlaucomaTest.vue'
 import CataractDetection from '@/views/CataractDetection.vue'
 import MacularTest from '@/views/MacularTest.vue'
+import DetectView from '@/views/DetectView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -140,6 +141,12 @@ const router = createRouter({
               meta: { requiresAuth: true }
             },
           ]
+        },
+        {
+          path: 'DetectView',
+          name: 'DetectView',
+          component: DetectView,
+          meta: { requiresAuth: true }
         },
       ]
     },
