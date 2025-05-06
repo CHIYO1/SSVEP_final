@@ -19,7 +19,7 @@ import GlaucomaTest from '@/views/GlaucomaTest.vue'
 import CataractDetection from '@/views/CataractDetection.vue'
 import MacularTest from '@/views/MacularTest.vue'
 import DetectView from '@/views/DetectView.vue'
-
+import AssessmentReport from '@/views/AssessmentReport.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -32,37 +32,37 @@ const router = createRouter({
       path: '/main',
       name: 'Main',
       component: MainView,
-      meta: { requiresAuth: true }, 
+      // meta: { requiresAuth: true }, 
       children:[
         {
           path: 'HomeView',
           name: 'Home',
           component: HomeView,
-          meta: { requiresAuth: true }
+          // meta: { requiresAuth: true }
         },
         {
           path: 'ChartData',
           name: 'ChartData',
           component: ChartData,
-          meta: { requiresAuth: true }
+          // meta: { requiresAuth: true }
         },
         {
           path: 'DataBase',
           name: 'DataBase',
           component: DataBase,
-          meta: { requiresAuth: true },
+          // meta: { requiresAuth: true },
           children: [
             {
               path: 'RealTimeData',
               name: 'RealTimeData',
               component: RealTimeData,
-              meta: { requiresAuth: true }
+              // meta: { requiresAuth: true }
             },
             {
               path: 'LocalData',
               name: 'LocalData',
               component: LocalData,
-              meta: { requiresAuth: true }
+              // meta: { requiresAuth: true }
             },
           ]
         },
@@ -70,25 +70,31 @@ const router = createRouter({
           path: 'EyeHealth',
           name: 'EyeHealth',
           component: EyeHealth,
-          meta: { requiresAuth: true },
+          // meta: { requiresAuth: true },
           children: [
             {
               path: 'GlaucomaTest',
               name: 'GlaucomaTest',
               component: GlaucomaTest,
-              meta: { requiresAuth: true }
+              // meta: { requiresAuth: true }
+            },
+            {
+              path:'AssessmentReport',
+              name:'AssessmentReport',
+              component:AssessmentReport,
+              // meta: { requiresAuth: true }
             },
             {
               path: 'CataractDetection',
               name: 'CataractDetection',
               component: CataractDetection,
-              meta: { requiresAuth: true }
+              // meta: { requiresAuth: true }
             },
             {
               path: 'MacularTest',
               name: 'MacularTest',
               component: MacularTest,
-              meta: { requiresAuth: true }
+              // meta: { requiresAuth: true }
             },
           ]
         },
@@ -96,49 +102,49 @@ const router = createRouter({
           path: 'HistoricalAssessments',
           name: 'HistoricalAssessments',
           component: HistoricalAssessments,
-          meta: { requiresAuth: true }
+          // meta: { requiresAuth: true }
         },
         {
           path: 'SettingView',
           name: 'SettingView',
           component: SettingView,
-          meta: { requiresAuth: true }
+          // meta: { requiresAuth: true }
         },
         {
           path: 'TreatmentRecommended',
           name: 'TreatmentRecommended',
           component: TreatmentRecommended,
-          meta: { requiresAuth: true }
+          // meta: { requiresAuth: true }
         },
         {
           path: 'VisualAnalysis',
           name: 'VisualAnalysis',
           component: VisualAnalysis,
-          meta: { requiresAuth: true }
+          // meta: { requiresAuth: true }
         },
         {
           path: 'VisualDetection',
           name: 'VisualDetection',
           component: VisualDetection,
-          meta: { requiresAuth: true },
+          // meta: { requiresAuth: true },
           children: [
             {
               path: 'ColorPerception',
               name: 'ColorPerception',
               component: ColorPerception,
-              meta: { requiresAuth: true }
+              // meta: { requiresAuth: true }
             },
             {
               path: 'VisualAcuityTesting',
               name: 'VisualAcuityTesting',
               component: VisualAcuityTesting,
-              meta: { requiresAuth: true }
+              // meta: { requiresAuth: true }
             },
             {
               path: 'SensitivityTesting',
               name: 'SensitivityTesting',
               component: SensitivityTesting,
-              meta: { requiresAuth: true }
+              // meta: { requiresAuth: true }
             },
           ]
         },
@@ -146,7 +152,7 @@ const router = createRouter({
           path: 'DetectView',
           name: 'DetectView',
           component: DetectView,
-          meta: { requiresAuth: true }
+          // meta: { requiresAuth: true }
         },
       ]
     },

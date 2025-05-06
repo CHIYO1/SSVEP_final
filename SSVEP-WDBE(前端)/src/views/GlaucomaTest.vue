@@ -2,7 +2,7 @@
     <div class="Detect">
       <h1>青光眼检测</h1>
   
-      <el-dialog v-model="store.tour_end" title="检测" width="80%" top="5vh">
+      <!-- <el-dialog v-model="store.tour_end" title="检测" width="80%" top="5vh">
         <div class="vedio">
           <video src="../../public/image/stimulus.mp4" controls
               preload="auto" width="100%" height="100%"></video>
@@ -14,7 +14,7 @@
             </el-button>
           </div>
         </template>
-      </el-dialog>
+      </el-dialog> -->
   
       <div class="tour">
         <DetectTour />
@@ -29,13 +29,26 @@
   <script setup lang="ts">
   import DetectTour from '../components/DetectTour.vue'
   import { useCounterStore } from '../stores/counter.js'
+  import { useRouter } from 'vue-router'
+  import { watch } from 'vue'
   
   const store = useCounterStore()
-  
+  const router = useRouter()
+
   const DetectStart = () => {
     store.open = true
+    
   }
-  
+
+ // 漫游关闭(点击finish后) 跳转到检测设置界面
+  watch(() => store.open, (newValue, oldValue) => {
+    if (oldValue === true && newValue === false) {
+      router.push({
+      path: '/main/VisualDetection/ColorPerception', // 或其他适合白内障检测的页面
+      query: { type: 'glaucoma', t: Date.now() } // 添加参数表明是白内障检测
+    });
+    }
+  })
   </script>
   
   

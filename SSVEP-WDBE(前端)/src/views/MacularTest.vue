@@ -2,7 +2,7 @@
     <div class="Detect">
       <h1>黄斑病检测</h1>
   
-      <el-dialog v-model="store.tour_end" title="检测" width="80%" top="5vh">
+      <!-- <el-dialog v-model="store.tour_end" title="检测" width="80%" top="5vh">
         <div class="vedio">
           <video src="../../public/image/stimulus.mp4" controls
               preload="auto" width="100%" height="100%"></video>
@@ -14,10 +14,10 @@
             </el-button>
           </div>
         </template>
-      </el-dialog>
+      </el-dialog> -->
   
       <div class="tour">
-        <DetectTour />
+      <DetectTour />
       </div>
       <div class="button_area">
         <el-button type="primary" plain @click="DetectStart">开始检测</el-button>
@@ -27,14 +27,27 @@
   </template>
   
   <script setup lang="ts">
+  import { useRouter } from 'vue-router'
   import DetectTour from '../components/DetectTour.vue'
   import { useCounterStore } from '../stores/counter.js'
+  import { watch } from 'vue'
   
   const store = useCounterStore()
+  const router = useRouter()
   
   const DetectStart = () => {
     store.open = true
   }
+  
+  // 监听漫游完成事件，当漫游关闭时直接跳转
+  watch(() => store.open, (newValue, oldValue) => {
+    if (oldValue === true && newValue === false) {
+      router.push({
+        path: '/main/VisualDetection/ColorPerception', // 或其他适合黄斑病检测的页面
+        query: { type: 'macular', t: Date.now() } // 添加参数表明是黄斑病检测
+      });
+    }
+  })
   
   </script>
   
